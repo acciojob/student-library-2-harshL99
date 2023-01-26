@@ -1,6 +1,7 @@
 package com.driver.services;
 
 import com.driver.models.Author;
+import com.driver.models.Book;
 import com.driver.repositories.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,6 @@ public class AuthorService {
     AuthorRepository authorRepository1;
 
     public void create(Author author){
-
+       authorRepository1.save(author);
     }
 }

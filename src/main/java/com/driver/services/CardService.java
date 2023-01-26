@@ -16,8 +16,13 @@ public class CardService {
 
     public Card createAndReturn(Student student){
         Card card = null;
+        card=new Card();
+        card.setCardStatus(CardStatus.ACTIVATED);
         //link student with a new card
-        return card;
+        card.setStudent(student);
+        student.setCard(card);
+
+        return cardRepository3.save(card);
     }
 
     public void deactivateCard(int student_id){
