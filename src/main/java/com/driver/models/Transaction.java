@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
+@Table
 public class Transaction {
 
     @Id
@@ -28,6 +29,8 @@ public class Transaction {
 
     private int fineAmount;
 
+
+
     @Column(columnDefinition = "TINYINT(1)")
     private boolean isIssueOperation;
 
@@ -36,15 +39,6 @@ public class Transaction {
 
     @CreationTimestamp
     private Date transactionDate;
-
-    public Transaction() {
-    }
-
-    public Transaction(int fineAmount, boolean isIssueOperation, TransactionStatus transactionStatus) {
-        this.fineAmount = fineAmount;
-        this.isIssueOperation = isIssueOperation;
-        this.transactionStatus = transactionStatus;
-    }
 
     public int getId() {
         return id;
@@ -109,5 +103,8 @@ public class Transaction {
     public void setTransactionDate(Date transactionDate) {
         this.transactionDate = transactionDate;
     }
-}
 
+
+
+
+}

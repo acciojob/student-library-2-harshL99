@@ -13,15 +13,21 @@ import java.util.List;
 //Add required annotations
 @RestController
 @RequestMapping("/author")
-public class AuthorController {
+//Add required annotations
 
+
+public class AuthorController {
     @Autowired
-    private AuthorService authorService;
+    AuthorService authorService;
+
     //Write createAuthor API with required annotations
     @PostMapping("/createAuthor")
-    public ResponseEntity createAuthor(@RequestBody Author author){
+    public ResponseEntity<String> createAuthor(@RequestBody Author author){
         authorService.create(author);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return  new ResponseEntity<>("Success", HttpStatus.CREATED);
     }
 
+
+
 }
+

@@ -14,13 +14,16 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookController {
 
-@Autowired
-private BookService bookService;
+    @Autowired
+    BookService bookService;
+
+
     //Write createBook API with required annotations
+
     @PostMapping("/createBook")
-    public ResponseEntity createBook(@RequestBody Book book){
+    public ResponseEntity<String> createBook(@RequestBody Book book){
         bookService.createBook(book);
-        return new ResponseEntity<>("The Book is successfully added to the System",HttpStatus.CREATED);
+        return new ResponseEntity<>("Success",HttpStatus.CREATED);
     }
 
     //Add required annotations
@@ -34,4 +37,6 @@ private BookService bookService;
         return new ResponseEntity<>(bookList, HttpStatus.OK);
 
     }
+
+
 }

@@ -10,40 +10,41 @@ import org.springframework.web.bind.annotation.*;
 //Add required annotations
 @RestController
 @RequestMapping("/student")
+//Add required annotations
 public class StudentController {
 
     @Autowired
-    private StudentService studentService;
-    //Add required annotations
+    StudentService studentService;
+
     @GetMapping("/getStudentByEmail")
+    //Add required annotations
     public ResponseEntity getStudentByEmail(@RequestParam("email") String email){
         studentService.getDetailsByEmail(email);
         return new ResponseEntity<>("Student details printed successfully ", HttpStatus.OK);
     }
 
-    //Add required annotations
     @GetMapping("/getStudentById")
+    //Add required annotations
     public ResponseEntity getStudentById(@RequestParam("id") int id){
         studentService.getDetailsById(id);
         return new ResponseEntity<>("Student details printed successfully ", HttpStatus.OK);
     }
-
+    @PostMapping("/createStudent")
     //Add required annotations
-    @PostMapping("/create")
     public ResponseEntity createStudent(@RequestBody Student student){
         studentService.createStudent(student);
         return new ResponseEntity<>("the student is successfully added to the system", HttpStatus.CREATED);
     }
 
     //Add required annotations
-    @PutMapping("/update")
+    @PutMapping("/updateStudent")
     public ResponseEntity updateStudent(@RequestBody Student student){
         studentService.updateStudent(student);
         return new ResponseEntity<>("student is updated", HttpStatus.ACCEPTED);
     }
 
+    @DeleteMapping("/deleteStudent")
     //Add required annotations
-    @DeleteMapping("/delete")
     public ResponseEntity deleteStudent(@RequestParam("id") int id){
         studentService.deleteStudent(id);
         return new ResponseEntity<>("student is deleted", HttpStatus.ACCEPTED);

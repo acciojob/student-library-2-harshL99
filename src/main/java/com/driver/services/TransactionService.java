@@ -35,57 +35,56 @@ public class TransactionService {
 
     public String issueBook(int cardId, int bookId) throws Exception {
         //check whether bookId and cardId already exist
+        Card card = cardRepository5.findById(cardId).get();
+        Book book = bookRepository5.findById(bookId).get();
+
+        Transaction transaction = new Transaction();
+        transaction.setCard(card);
+        transaction.setBook(book);
+        transaction.setIssueOperation(true);
+
         //conditions required for successful transaction of issue book:
         //1. book is present and available
         // If it fails: throw new Exception("Book is either unavailable or not present");
-        //2. card is present and activated
-        // If it fails: throw new Exception("Card is invalid");
-        //3. number of books issued against the card is strictly less than max_allowed_books
-        // If it fails: throw new Exception("Book limit has reached for this card");
-        //If the transaction is successful, save the transaction to the list of transactions and return the id
-
-        //Note that the error message should match exactly in all cases
-        Book book = bookRepository5.findById(bookId).get();
-        Card card = cardRepository5.findById(cardId).get();
-
-        Transaction transaction = new Transaction();
-
-        transaction.setBook(book);
-        transaction.setCard(card);
-        transaction.setIssueOperation(true);
-
         if(book == null || !book.isAvailable()){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
             throw new Exception("Book is either unavailable or not present");
         }
 
+        //2. card is present and activated
+        // If it fails: throw new Exception("Card is invalid");
         if(card == null || card.getCardStatus().equals(CardStatus.DEACTIVATED)){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
             throw new Exception("Card is invalid");
         }
-
+        //3. number of books issued against the card is strictly less than max_allowed_books
+        // If it fails: throw new Exception("Book limit has reached for this card");
         if(card.getBooks().size() >= max_allowed_books){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
             throw new Exception("Book limit has reached for this card");
         }
-
+        //If the transaction is successful, save the transaction to the list of transactions and return the id
         book.setCard(card);
         book.setAvailable(false);
         List<Book> bookList = card.getBooks();
         bookList.add(book);
         card.setBooks(bookList);
 
+        cardRepository5.save(card);
         bookRepository5.updateBook(book);
-
         transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
 
         transactionRepository5.save(transaction);
+        //Note that the error message should match exactly in all cases
 
-        return transaction.getTransactionId();
+        return transaction.getTransactionId(); //return transactionId instead
+
+
     }
+
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
 
@@ -109,10 +108,6 @@ public class TransactionService {
         book.setAvailable(true);
         book.setCard(null);
 
-
-
-        //Remve that book from that card list
-
         bookRepository5.updateBook(book);
 
         Transaction tr = new Transaction();
@@ -125,5 +120,9 @@ public class TransactionService {
         transactionRepository5.save(tr);
 
         return tr;
+        //for the given transaction calculate the fine amount considering the book has been returned exactly when this function is called
+        //make the book available for other users
+        //make a new transaction for return book which contains the fine amount as well
+        //return the transaction after updating all details
     }
 }
